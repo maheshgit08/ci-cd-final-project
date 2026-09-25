@@ -1,22 +1,22 @@
 ---
-apiVersion: {tekton.dev/v1beta1}
-kind: {task}
+apiVersion: tekton.dev/v1beta1
+kind: task
 metadata:
-  name: {cleanup}
+  name: cleanup
 spec:
   description: This task will clean up a workspace by deleting all the files.
   workspaces:
-    - name: {source}
+    - name: source
   steps:
-    - name: {remove}
-      image: {alpine:3}
+    - name: remove
+      image: alpine:3
       env:
-        - name: {WORKSPACE_SPACE_PATH}
-          value: ${workspaces.source.path}
-      workingDir: ${workspaces.source.path}
+        - name: WORKSPACE_SPACE_PATH
+          value: $(workspaces.source.path)
+      workingDir: $(workspaces.source.path)
       securityContext:
-        runAsNonRoot: {false}
-        runAsUser: {0}
+        runAsNonRoot: false
+        runAsUser: 0
       script: |
        #!/usr/bin/env sh
     set -eu
@@ -34,22 +34,22 @@ spec:
       rm -rf "${WORKSPACE_SOURCE_PATH}"/..?*
     fi
     ---
-apiVersion: {tekton.dev/v1beta1}
-kind: {Task}
+apiVersion: tekton.dev/v1beta1
+kind: Task
 metadata:
-  name: {nose}
+  name: nose
 spec:
   workspaces:
-    - name: {source}
+    - name: source
   params:
-    - name: {args}
-      description: {Arguments to pass to nose
+    - name: args
+      description: Arguments to pass to nose
 }
-      type: {string}
-      default: {"-v"}
+      type: string
+      default: "-v"
   steps:
-    - name: {nosetests}
-      image: {python:3.9-slim}
+    - name: nosetests
+      image: python:3.9-slim
       workingDir: $(workspaces.source.path)}
       script: |
           #!/bin/bash
